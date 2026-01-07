@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mizi Daily Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .header h1 {
+            color: #333;
+            margin: 0;
+            font-size: 28px;
+        }
+        
+        .progress-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        
+        .info-item {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        .info-label {
+            color: #666;
+            font-weight: 600;
+        }
+        
+        .info-value {
+            color: #333;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .form-section {
+            background: white;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .form-section:last-child {
+            border-bottom: none;
+            border-radius: 0 0 12px 12px;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 20px;
+            background: #667eea;
+            border-radius: 2px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+        }
+        
+        input[type="date"],
+        input[type="number"],
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="date"]:focus,
+        input[type="number"]:focus,
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+        
+        .checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-submit {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-submit:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-reset {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-reset:hover {
+            background: #e0e0e0;
+        }
+        
+        .btn-history {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .btn-history:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .progress-info {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-top">
+                <h1>📊 Mizi Daily Tracker</h1>
+                <a href="history.html" class="btn-history">📋 View History</a>
+            </div>
+            <div class="progress-info">
+                <div class="info-item">
+                    <div class="info-label">Current Progress</div>
+                    <div class="info-value" id="progressDisplay">79.4kg → 75kg</div>
+                    <div style="margin-top: 5px; color: #28a745; font-weight: 600;">↓ 0.5kg in 6 days</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Timeline</div>
+                    <div class="info-value">1 Jan - 28 Feb</div>
+                    <div style="margin-top: 5px; color: #666; font-size: 12px;">58 days target</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="success-message" id="successMsg">✓ Entry saved successfully!</div>
+        
+        <form id="trackerForm">
+            <!-- Date & Weight Section -->
+            <div class="form-section">
+                <div class="section-title">Weight & Measurements</div>
+                
+                <div class="form-group">
+                    <label for="date">📅 Date</label>
+                    <input type="date" id="date" name="date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="weight">⚖️ Weight (kg)</label>
+                    <input type="number" id="weight" name="weight" step="0.1" min="70" max="90" placeholder="e.g., 78.5" required>
+                </div>
+            </div>
+            
+            <!-- Nutrition Section -->
+            <div class="form-section">
+                <div class="section-title">Nutrition</div>
+                
+                <div class="form-group">
+                    <label for="calories">🔥 Calories Consumed (kcal)</label>
+                    <input type="number" id="calories" name="calories" min="1000" max="3000" placeholder="e.g., 1800" required>
+                    <div style="font-size: 12px; color: #666; margin-top: 5px;">Target: 300-400kcal deficit | Moderate-High Carb</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="meals">🍽️ Meals & Notes</label>
+                    <textarea id="meals" name="meals" placeholder="e.g., Breakfast: Oats with banana, Lunch: Grilled chicken with rice..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Activity Section -->
+            <div class="form-section">
+                <div class="section-title">Activity</div>
+                
+                <div class="form-group">
+                    <label for="steps">👟 Steps Walked</label>
+                    <input type="number" id="steps" name="steps" min="0" max="50000" placeholder="e.g., 10500" required>
+                    <div style="font-size: 12px; color: #666; margin-top: 5px;">Daily target: 10,000 steps</div>
+                </div>
+                
+                <div class="form-group">
+                    <label>💪 Training Sessions</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="training1" name="training" value="Session 1">
+                            <label for="training1">Session 1</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="training2" name="training" value="Session 2">
+                            <label for="training2">Session 2</label>
+                        </div>
+                    </div>
+                    <div style="font-size: 12px; color: #666; margin-top: 8px;">Target: 4x per week</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="trainingNotes">Training Notes</label>
+                    <textarea id="trainingNotes" name="trainingNotes" placeholder="e.g., Weight training - Chest & Triceps, 45 minutes..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Peptides Section -->
+            <div class="form-section">
+                <div class="section-title">Peptides & Supplements</div>
+                
+                <div class="form-group">
+                    <label>Peptides Taken</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="peptide1" name="peptides" value="Reta">
+                            <label for="peptide1">Reta</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="peptide2" name="peptides" value="Tesa">
+                            <label for="peptide2">Tesa</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="peptide3" name="peptides" value="Mots-c">
+                            <label for="peptide3">Mots-c</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="peptide4" name="peptides" value="GHK-Cu">
+                            <label for="peptide4">GHK-Cu</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="peptide5" name="peptides" value="Semax">
+                            <label for="peptide5">Semax</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="peptide6" name="peptides" value="CJC+Ipa">
+                            <label for="peptide6">CJC+Ipa</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="peptide7" name="peptides" value="Slu-pp332">
+                            <label for="peptide7">Slu-pp332</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="supplements">Additional Notes</label>
+                    <textarea id="supplements" name="supplements" placeholder="e.g., Took vitamins, protein shake..."></textarea>
+                </div>
+            </div>
+            
+            <!-- General Notes -->
+            <div class="form-section">
+                <div class="section-title">General Notes</div>
+                
+                <div class="form-group">
+                    <label for="notes">📝 Daily Notes</label>
+                    <textarea id="notes" name="notes" placeholder="Sleep quality, energy levels, mood, any observations..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Buttons -->
+            <div class="form-section">
+                <div class="button-group">
+                    <button type="submit" class="btn-submit">💾 Save Entry</button>
+                    <button type="reset" class="btn-reset">Clear</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        // Set today's date as default
+        document.getElementById('date').valueAsDate = new Date();
+        
+        // Form submission
+        document.getElementById('trackerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = {
+                date: document.getElementById('date').value,
+                weight: document.getElementById('weight').value,
+                calories: document.getElementById('calories').value,
+                meals: document.getElementById('meals').value,
+                steps: document.getElementById('steps').value,
+                training: Array.from(document.querySelectorAll('input[name="training"]:checked')).map(cb => cb.value),
+                trainingNotes: document.getElementById('trainingNotes').value,
+                peptides: Array.from(document.querySelectorAll('input[name="peptides"]:checked')).map(cb => cb.value),
+                supplements: document.getElementById('supplements').value,
+                notes: document.getElementById('notes').value,
+                timestamp: new Date().toLocaleString()
+            };
+            
+            // Save to localStorage
+            let entries = JSON.parse(localStorage.getItem('miziEntries')) || [];
+            entries.push(formData);
+            localStorage.setItem('miziEntries', JSON.stringify(entries));
+            
+            // Show success message
+            const successMsg = document.getElementById('successMsg');
+            successMsg.style.display = 'block';
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 3000);
+            
+            // Log to console (for debugging)
+            console.log('Entry saved:', formData);
+        });
+        
+        // Auto-update progress display when weight is entered
+        document.getElementById('weight').addEventListener('change', function() {
+            const weight = parseFloat(this.value);
+            if (weight) {
+                const currentWeight = 79.4;
+                const target = 75;
+                const difference = (currentWeight - weight).toFixed(1);
+                const progress = ((currentWeight - weight) / (currentWeight - target) * 100).toFixed(0);
+                
+                document.getElementById('progressDisplay').textContent = 
+                    `${weight}kg (↓ ${difference}kg)`;
+            }
+        });
+    </script>
+</body>
+</html>
